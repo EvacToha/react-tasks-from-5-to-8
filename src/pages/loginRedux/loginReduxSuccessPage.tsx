@@ -2,6 +2,7 @@
 import React from "react";
 
 import {useAppSelector} from "../../app/hooks";
+import {OutputForm} from "../../features/outputForm/outputForm";
 
 
 const LoginReduxSuccessPage = () => {
@@ -9,12 +10,7 @@ const LoginReduxSuccessPage = () => {
 
     return (
         <>
-            <DialogContentText>
-                Почта: {state.login.email}
-            </DialogContentText>
-            <DialogContentText>
-                Пароль: {state.login.password}
-            </DialogContentText>
+            <OutputForm email={state.login.email} password={state.login.password}/>
         </>
     );
 }

@@ -1,4 +1,6 @@
-﻿export interface LoginState {
+﻿import {FormEventHandler} from "react";
+
+export interface LoginState {
     email: string;
     password: string;
 }
@@ -21,5 +23,14 @@ export interface FormikLoginState {
 export interface LoginReduxPageState {
     login: LoginState;
     error: ErrorState;
+}
+
+export interface InputFormProps {
+    value: string;
+    error: string | undefined;
+    placeholder: string;
+    name: string;
+    type: string;
+    onInput: FormEventHandler<HTMLDivElement> | undefined;
 }
 

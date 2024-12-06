@@ -3,10 +3,11 @@ import { Configuration } from "webpack";
 import CopyWebpackPlugin from "copy-webpack-plugin";
 
 const config: any = {
-    mode:
-        (process.env.NODE_ENV as "production" | "development" | undefined) ??
-        "development",
     entry: "./src/entrypoint.tsx",
+    output: {
+        filename: "bundle.js",
+        path: path.resolve(__dirname, "dist"),
+    },
     module: {
         rules: [
             {
@@ -20,14 +21,12 @@ const config: any = {
             },
         ],
     },
+    mode:
+        (process.env.NODE_ENV as "production" | "development" | undefined) ??
+        "development",
 
     resolve: {
         extensions: [".tsx", ".ts", ".js"],
-    },
-
-    output: {
-        filename: "bundle.js",
-        path: path.resolve(__dirname, "dist"),
     },
 
     plugins: [

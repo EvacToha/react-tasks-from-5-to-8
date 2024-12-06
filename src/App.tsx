@@ -12,6 +12,7 @@ import GetActivitySagaPage from "./pages/getActivitySaga/getActivitySagaPage";
 
 import LoginMstPage from "./pages/loginMst/loginMstPage";
 import LoginMstSuccessPage from "./pages/loginMst/loginMstSuccessPage";
+import {userStore} from "./stores/UserStore";
 
 export default function App() {
     return (
@@ -25,7 +26,7 @@ export default function App() {
                         <Route path="success" element={ <LoginFormikSuccessPage/> }/>
                     </Route>
                     <Route path="/get-activity-saga" element={ <GetActivitySagaPage/> } />
-                    <Route path="/login-mst" element={ <LoginMstPage/> } >
+                    <Route path="/login-mst" element={ <LoginMstPage userStore={userStore}/> } >
                         <Route path="success" element={ <LoginMstSuccessPage/> }/>
                     </Route>
                 </Route>

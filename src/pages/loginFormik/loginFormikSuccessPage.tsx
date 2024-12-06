@@ -1,6 +1,7 @@
 ﻿import React from "react";
 import {useAppSelector} from "../../app/hooks";
 import {DialogContentText} from "@mui/material";
+import {OutputForm} from "../../features/outputForm/outputForm";
 
 
 
@@ -9,12 +10,7 @@ const LoginPage = () => {
 
     return (
         <>
-            <DialogContentText>
-                Почта: {state.email}
-            </DialogContentText>
-            <DialogContentText>
-                Пароль: {state.password}
-            </DialogContentText>
+            <OutputForm email={state.email} password={state.password}/>
         </>
     );
 }
