@@ -1,11 +1,11 @@
 ﻿import { call, put, takeEvery, CallEffect, PutEffect  } from "redux-saga/effects";
-import axios from "axios";
 
 import {fetchTasksRequest, fetchTasksFailure, fetchTasksSuccess} from "../pages/getActivitySaga/getActivitySagaPageSlice";
+import {axiosGet} from "../axios/getActivityAxios";
 
 
 const fetchData = async (): Promise<void> => {
-    const response = await axios.get("http://localhost:8080/api/random");
+    const response = await axiosGet("random");
     return response.data;
 }
 
@@ -13,7 +13,7 @@ function* handleFetchData() : Generator<CallEffect<void> | PutEffect, void, unkn
     console.log("handleFetchData");
     try {
         const data = yield call(fetchData);
-        yield put({ type: fetchTasksSuccess.type, payload: data });
+        yield put({ type: fetchTasksSuccess.type, payload: JSON.stringify(data) });
     } catch (error) {
         yield put({ type: fetchTasksFailure.type, payload: (error as Error).message })
     }

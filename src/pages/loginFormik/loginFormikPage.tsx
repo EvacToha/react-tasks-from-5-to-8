@@ -7,6 +7,8 @@ import {useFormik} from "formik";
 import {FormikErrorState, FormikLoginState} from "../../interfaces";
 import {useAppDispatch} from "../../app/hooks";
 import {setLogin} from "./loginFormikPageSlice";
+import {InputForm} from "../../features/inputForm/inputForm";
+import {OutputForm} from "../../features/outputForm/outputForm";
 
 const validate = (values : FormikLoginState) => {
     let errors = {} as FormikErrorState;
@@ -78,12 +80,7 @@ const LoginFormikPage = () => {
                     <div></div>
                     <Button type="submit" >Войти</Button>
                 </form>
-                <DialogContentText>
-                    Почта: {formik.values.email}
-                </DialogContentText>
-                <DialogContentText>
-                    Пароль: {formik.values.password}
-                </DialogContentText>
+                <OutputForm email={formik.values.email} password={formik.values.password}/>
             </LoginFormContainer>
         ) : (
             <Outlet/>

@@ -4,6 +4,7 @@ import {observer} from "mobx-react-lite";
 
 import {userStore} from "../../stores/UserStore";
 import {getSnapshot} from "mobx-state-tree";
+import {OutputForm} from "../../features/outputForm/outputForm";
 
 const LoginMstSuccessPage = () => {
 
@@ -12,12 +13,7 @@ const LoginMstSuccessPage = () => {
 
     return (
         <>
-            <DialogContentText>
-                Почта: {userStore.user.email}
-            </DialogContentText>
-            <DialogContentText>
-                Пароль: {userStore.user.password}
-            </DialogContentText>
+            <OutputForm email={userStore.user.email} password={userStore.user.password}/>
         </>
     );
 };

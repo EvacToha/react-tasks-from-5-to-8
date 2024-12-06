@@ -6,6 +6,7 @@ import {ErrorState} from "../../interfaces"
 import {useAppDispatch, useAppSelector} from "../../app/hooks";
 import {setError, setLogin} from "./loginReduxPageSlice";
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
+import {OutputForm} from "../../features/outputForm/outputForm";
 
 const LoginPage = () => {
     const state = useAppSelector(state => state.loginReduxPage);
@@ -80,12 +81,7 @@ const LoginPage = () => {
 
                     <Button type="submit" >Войти</Button>
                 </form>
-                <DialogContentText>
-                    Почта: {state.login.email}
-                </DialogContentText>
-                <DialogContentText>
-                    Пароль: {state.login.password}
-                </DialogContentText>
+                <OutputForm email={state.login.email} password={state.login.password}/>
             </LoginFormContainer>
         ) : (
             <Outlet/>

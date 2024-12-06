@@ -1,67 +1,65 @@
-﻿import {Input, InputLabel, Button, DialogContentText, FormHelperText} from "@mui/material";
-import React, {ChangeEvent, FormEvent, useState} from "react";
+﻿import {Button} from "@mui/material";
+import React, {ChangeEvent, FormEvent} from "react";
 import { observer } from 'mobx-react-lite'
 
 import {LoginFormContainer} from "../../styles";
-import {ErrorState, LoginState} from "../../interfaces"
+import {UserStoreType} from "../../stores/UserStore";
 
 import {Outlet, useLocation, useNavigate} from "react-router-dom";
-import {userStore} from "../../stores/UserStore";
+import {OutputForm} from "../../features/outputForm/outputForm";
+import {InputForm} from "../../features/inputForm/inputForm";
 
 
 
-const LoginMstPage = observer(() => {
-    const [user, setUser] = useState<LoginState>({email: "",password: ""});
-    const [userError, setUserError] = useState<ErrorState>({emailError: "", passwordError: ""});
+const LoginMstPage = observer(({ userStore }: { userStore: UserStoreType }) => {
+
 
     const navigate = useNavigate();
     const location = useLocation();
 
     const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-        const {name, value} = event.target;
-        setUser({...user, [name]: value});
+        const {name, value} = event.target
+        userStore.user.setProp(name, value);
+        userStore.clearErrors();
     }
 
     const handleSubmit = (event:  FormEvent<HTMLFormElement>) => {
         event.preventDefault()
 
         if(validate()) {
-            userStore.setUser(user.email, user.password);
             navigate("success")
         }
     }
 
     const validate = () => {
         let isValid = true;
-        const error : ErrorState = {emailError: "", passwordError: ""};
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const capLetterRegex = /^.*[A-Z].*$/;
         const specLetterRegex = /[^a-zA-Z0-9]/;
 
-        if(!user.email){
-            error.emailError = "Поле не должно быть пустым.";
+        if(!userStore.user.email){
+            userStore.addError("email", "Поле не должно быть пустым.");
             isValid = false;
-        } else if(!emailRegex.test(user.email)) {
-            error.emailError = "Некорректная почта.";
-            isValid = false;
-        }
-
-        if(!user.password){
-            error.passwordError = "Поле не должно быть пустым.";
-            isValid = false;
-        } else if(user.password.length < 6){
-            error.passwordError = "Пароль не меньше 6 символов!";
-            isValid = false;
-        } else if(!capLetterRegex.test(user.password)) {
-            error.passwordError = "Пароль не имеет заглавную букву!";
-            isValid = false;
-        } else if(!specLetterRegex.test(user.password)) {
-            error.passwordError = "Пароль не имеет спецсимвол!";
+        } else if(!emailRegex.test(userStore.user.email)) {
+            userStore.addError("email", "Некорректная почта.");
             isValid = false;
         }
 
-        setUserError(error);
+        if(!userStore.user.password){
+            userStore.addError("password", "Поле не должно быть пустым.");
+            isValid = false;
+        } else if(userStore.user.password.length < 6){
+            userStore.addError("password", "Пароль не меньше 6 символов!");
+            isValid = false;
+        } else if(!capLetterRegex.test(userStore.user.password)) {
+            userStore.addError("password", "Пароль не имеет заглавную букву!");
+            isValid = false;
+        } else if(!specLetterRegex.test(userStore.user.password)) {
+            userStore.addError("password", "Пароль не имеет спецсимвол!");
+            isValid = false;
+        }
+
         return isValid;
     }
 
@@ -69,27 +67,24 @@ const LoginMstPage = observer(() => {
             {location.pathname === "/login-mst" ? (
                 <LoginFormContainer>
                     <form onSubmit={handleSubmit}>
-                        <InputLabel> Почта: </InputLabel>
-                        <Input name="email" onInput={handleChange} value={user.email} placeholder="Электронная почта" />
-                        <FormHelperText>
-                            {userError.emailError}
-                        </FormHelperText>
-
-
-                        <InputLabel> Пароль: </InputLabel>
-                        <Input type="password" name="password" onInput={handleChange} value={user.password} placeholder="Пароль" />
-                        <FormHelperText>
-                            {userError.passwordError}
-                        </FormHelperText>
+                        <InputForm name="email"
+                                   type="email"
+                                   placeholder="Почта"
+                                   value={userStore.user.email}
+                                   error={userStore.errors.find(er => er.type === "email")?.message}
+                                   onInput={handleChange}
+                        />
+                        <InputForm name="password"
+                                   type="password"
+                                   placeholder="Пароль"
+                                   value={userStore.user.password}
+                                   error={userStore.errors.find(er => er.type === "password")?.message}
+                                   onInput={handleChange}
+                        />
 
                         <Button type="submit" >Войти</Button>
                     </form>
-                    <DialogContentText>
-                        Почта: {user.email}
-                    </DialogContentText>
-                    <DialogContentText>
-                        Пароль: {user.password}
-                    </DialogContentText>
+                    <OutputForm email={userStore.user.email} password={userStore.user.password}/>
                 </LoginFormContainer>
             ) : (
                 <Outlet/>
